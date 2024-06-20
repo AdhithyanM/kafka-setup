@@ -16,25 +16,19 @@ cd <your-repo-directory>
 
 ### Starting the Services
 
-1. **Start Docker Containers**:
+1. **Start the Services**:
 
-   Run the following command to start the Kafka and Zookeeper services:
-
-   ```bash
-   docker-compose up -d
-   ```
-
-   This will start the services in detached mode.
+   - Navigate to the directory containing the `docker-compose.yml` file and run:
+     ```bash
+     docker-compose up -d
+     ```
 
 2. **Verify the Setup**:
-
-   To ensure that both Kafka and Zookeeper are running, use the following command:
-
-   ```bash
-   docker ps
-   ```
-
-   You should see containers for both Kafka and Zookeeper.
+   - Check that both Kafka and Zookeeper are running:
+     ```bash
+     docker ps
+     ```
+   - You should see containers for both Kafka and Zookeeper running.
 
 ### Stopping the Services
 
@@ -44,43 +38,90 @@ To stop the services, run:
 docker-compose down
 ```
 
-### Accessing Kafka and Zookeeper
+### Using Kafka CLI Tools
 
-- **Zookeeper**: Access Zookeeper on port `2181`.
-- **Kafka**: Access Kafka on port `9092`.
+Once your Kafka and Zookeeper services are up and running, you can execute Kafka CLI commands inside the Kafka container.
 
-### Producing and Consuming Messages
+#### Step 1: Access the Kafka Container
 
-1. **Producing Messages**:
+You can access the Kafka container's shell to run commands:
 
-   To produce messages to a Kafka topic:
+```bash
+docker-compose exec kafka bash
+```
 
-   ```bash
-   docker-compose exec kafka kafka-console-producer.sh --topic <topic-name> --bootstrap-server localhost:9092
-   ```
+#### Step 2: Run Kafka CLI Commands
 
-   Replace `<topic-name>` with your desired topic name.
+Now that you are inside the Kafka container, you can use the Kafka CLI tools to create topics, produce messages, and consume messages.
 
-2. **Consuming Messages**:
-
-   To consume messages from a Kafka topic:
+1. **Create a Topic**:
 
    ```bash
-   docker-compose exec kafka kafka-console-consumer.sh --topic <topic-name> --bootstrap-server localhost:9092 --from-beginning
+   kafka-topics --create --topic my-topic --bootstrap-server localhost:9092 --partitions 3 --replication-factor 1
    ```
 
-   Replace `<topic-name>` with your desired topic name.
+2. **List Topics**:
 
-### Customization
+   ```bash
+   kafka-topics --list --bootstrap-server localhost:9092
+   ```
 
-You can customize the configuration by modifying the `docker-compose.yml` file as needed.
+3. **Describe a Topic**:
 
-### Troubleshooting
+   ```bash
+   kafka-topics --describe --topic my-topic --bootstrap-server localhost:9092
+   ```
 
-- Ensure Docker and Docker Compose are installed and running.
-- Check logs for Kafka and Zookeeper containers if they fail to start:
+4. **Produce Messages**:
 
-  ```bash
-  docker-compose logs zookeeper
-  docker-compose logs kafka
-  ```
+   - Start a producer to send messages to a topic:
+     ```bash
+     kafka-console-producer --topic my-topic --bootstrap-server localhost:9092
+     ```
+   - Type your messages and press Enter to send each one. Use `Ctrl+C` to exit the producer.
+
+5. **Consume Messages**:
+   - Start a consumer to read messages from a topic:
+     ```bash
+     kafka-console-consumer --topic my-topic --bootstrap-server localhost:9092 --from-beginning
+     ```
+
+### Example Workflow
+
+Here's a step-by-step example workflow:
+
+1. **Create a Topic**:
+
+   ```bash
+   docker-compose exec kafka kafka-topics --create --topic test-topic --bootstrap-server localhost:9092 --partitions 3 --replication-factor 1
+   ```
+
+2. **List All Topics**:
+
+   ```bash
+   docker-compose exec kafka kafka-topics --list --bootstrap-server localhost:9092
+   ```
+
+3. **Describe the Topic**:
+
+   ```bash
+   docker-compose exec kafka kafka-topics --describe --topic test-topic --bootstrap-server localhost:9092
+   ```
+
+4. **Produce Messages to the Topic**:
+
+   ```bash
+   docker-compose exec kafka kafka-console-producer --topic test-topic --bootstrap-server localhost:9092
+   ```
+
+   - After running the command, type messages and press Enter to send each one.
+   - Use `Ctrl+C` to exit the producer.
+
+5. **Consume Messages from the Topic**:
+   ```bash
+   docker-compose exec kafka kafka-console-consumer --topic test-topic --bootstrap-server localhost:9092 --from-beginning
+   ```
+
+### Summary
+
+This setup provides a Confluent Kafka and Zookeeper configuration using Docker Compose. By following the steps and commands provided, you can easily manage your Kafka topics and messages using the Kafka CLI tools.
