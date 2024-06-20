@@ -10,9 +10,9 @@ services:
     ports:
       - "2181:2181"
 
-  kafka:
+  broker:
     image: confluentinc/cp-kafka:latest
-    container_name: kafka
+    container_name: broker
     depends_on:
       - zookeeper
     environment:

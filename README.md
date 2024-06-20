@@ -47,7 +47,7 @@ Once your Kafka and Zookeeper services are up and running, you can execute Kafka
 You can access the Kafka container's shell to run commands:
 
 ```bash
-docker-compose exec kafka bash
+docker-compose exec broker bash
 ```
 
 #### Step 2: Run Kafka CLI Commands
@@ -93,25 +93,25 @@ Here's a step-by-step example workflow:
 1. **Create a Topic**:
 
    ```bash
-   docker-compose exec kafka kafka-topics --create --topic test-topic --bootstrap-server localhost:9092 --partitions 3 --replication-factor 1
+   docker-compose exec broker kafka-topics --create --topic test-topic --bootstrap-server localhost:9092 --partitions 3 --replication-factor 1
    ```
 
 2. **List All Topics**:
 
    ```bash
-   docker-compose exec kafka kafka-topics --list --bootstrap-server localhost:9092
+   docker-compose exec broker kafka-topics --list --bootstrap-server localhost:9092
    ```
 
 3. **Describe the Topic**:
 
    ```bash
-   docker-compose exec kafka kafka-topics --describe --topic test-topic --bootstrap-server localhost:9092
+   docker-compose exec broker kafka-topics --describe --topic test-topic --bootstrap-server localhost:9092
    ```
 
 4. **Produce Messages to the Topic**:
 
    ```bash
-   docker-compose exec kafka kafka-console-producer --topic test-topic --bootstrap-server localhost:9092
+   docker-compose exec broker kafka-console-producer --topic test-topic --bootstrap-server localhost:9092
    ```
 
    - After running the command, type messages and press Enter to send each one.
@@ -119,7 +119,7 @@ Here's a step-by-step example workflow:
 
 5. **Consume Messages from the Topic**:
    ```bash
-   docker-compose exec kafka kafka-console-consumer --topic test-topic --bootstrap-server localhost:9092 --from-beginning
+   docker-compose exec broker kafka-console-consumer --topic test-topic --bootstrap-server localhost:9092 --from-beginning
    ```
 
 ### Summary
